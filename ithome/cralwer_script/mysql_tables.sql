@@ -57,3 +57,36 @@ create table if not exists newsdetail(
     duty_man varchar(100),
     insert_time datetime
 )
+
+
+create table if not exists newscomment(
+    newsid    varchar(10),
+    l   varchar(100),
+    comment_id  varchar(100),
+    comment mediumtext,
+    nick_name   varchar(100),
+    userid  varchar(100),
+    user_location   varchar(100),
+    comment_time    varchar(100),
+    support varchar(100),
+    disagree  varchar(100),
+    device_name  varchar(100),
+    r   varchar(100),
+    clientid    varchar(100),
+    ir  varchar(100),        ----是否是it之家小编
+    sf  varchar(100),
+    user_level  varchar(100),
+    tl  varchar(100),
+    rl  varchar(100),
+    reply_userid    varchar(100),
+    m   varchar(100),
+    headimg varchar(200),
+    writetime   varchar(100),
+    clientname  varchar(100),
+    userindexurl    varchar(200),
+    insert_time datetime	
+) DEFAULT CHARSET=utf8mb4
+
+create table if not exists newscomment_re(
+    newsid    varchar(10),
+)

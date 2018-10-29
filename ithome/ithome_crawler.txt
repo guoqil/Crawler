@@ -22,3 +22,16 @@ http://dyn.ithome.com/api/user/gui?suid=945b7c58ec436361
 
 
 https://m.ithome.com/api/news/newshitcountget?NewsIDs=380610%7C380609%7C380608%7C380516%7C380607%7C380606%7C380605%7C380604%7C380603%7C380602%7C380601%7C380600%7C380599%7C380545%7C380598%7C380597%7C380596%7C380595%7C380594%7C380593%7C380592%7C380453%7C380582%7C380588%7C380587%7C
+
+
+
+评论页：
+1、first_url：https://m.ithome.com/api/comment/newscommentlistget?NewsID=389722
+2、first_url+&LapinID=&MaxCommentID=37400404&Latest=
+    MaxCommentID为1中爬取最低楼层的评论id
+3、取2中爬取的最低楼层id继续爬取
+4、直到出现 "SF": "1楼"为止
+
+https://m.ithome.com/api/comment/newscommentlistget?NewsID=391490&LapinID=&MaxCommentID=37634333&Latest=
+https://m.ithome.com/api/comment/newscommentlistget?NewsID=389722&LapinID=&MaxCommentID=37386018&Latest=
+
