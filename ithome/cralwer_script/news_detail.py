@@ -67,9 +67,10 @@ class GetNewsDetail(object):
 
         # pool = Pool(processes=self.process_num)
         for newsid in (newsid_list):
-            print(newsid)
+            nid = str(newsid[0])
+            print(nid)
             try:
-                self.get_news_detail(newsid)
+                self.get_news_detail(nid)
             except Exception as e:
                 comm.print_log("error","%s" %traceback.format_exc())
             # pool.apply_async(self.get_news_detail,(newsid,))
