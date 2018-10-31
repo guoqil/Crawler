@@ -58,7 +58,7 @@ class Py_common(object):
         while True:
             try:
                 retry_times -= 1
-                cnx = pymysql.Connect(user=self.gConf['conn_kael.user'],password=self.gConf['conn_kael.pwd'],host=self.gConf['conn_kael.host'],port=int(self.gConf['conn_kael.port']),database=self.gConf['conn_kael.db'],charset='utf8')
+                cnx = pymysql.Connect(user=self.gConf['conn_kael.user'],password=self.gConf['conn_kael.pwd'],host=self.gConf['conn_kael.host'],port=int(self.gConf['conn_kael.port']),database=self.gConf['conn_kael.db'],charset='utf8mb4')
                 break
             except Exception as e:
                 if retry_times == 0:

@@ -72,16 +72,22 @@ class GetNewsComment(object):
             cursor = conn.cursor()
             cursor.execute(sSql)
             newsid_list = cursor.fetchall()
+            # print(newsid_list)
             conn.close()
         except Exception as e:
             comm.print_log("error","%s" %traceback.format_exc())
 
-        pool = Pool(processes=self.process_num)
-        for newsid in (newsid_list):
-            print(newsid)
-            pool.apply_async(self.get_news_comment,(newsid,))
-        pool.close()
-        pool.join()
+        # pool = Pool(processes=self.process_num)
+        for newsid in newsid_list:
+            nid = str(newsid[0])
+            print(nid)
+            try:
+                self.get_news_comment(nid)
+            except Exception as e:
+                comm.print_log("error","%s" %traceback.format_exc())
+            # pool.apply_async(self.get_news_comment,(newsid,))
+        # pool.close()
+        # pool.join()
         print("done!")
     
     def get_news_comment(self,newsid):
@@ -100,46 +106,52 @@ class GetNewsComment(object):
                 last_f = clist[len(clist)-1]
                 last_cid = last_f["M"]["Ci"]
                 url = "https://m.ithome.com/api/comment/newscommentlistget?NewsID=%s&LapinID=&MaxCommentID=%s&Latest=" %(newsid,last_cid)
-
+                cl_list = []
                 for comments in clist:
                     comment = comments["M"]
-                    cl = [newsid]
+                    cl = (newsid,)
                     for i in comment.keys():
-                        cl.append(comment[i])                
-                    try:
-                        conn = comm.conn_kael()
-                        cursor = conn.cursor()
-                        sSql = "insert into %s (newsid,l,comment_id,comment,nick_name,userid,user_location,\
-                                    comment_time,support,disagree,device_name,r,clientid,ir,sf,\
-                                    user_level,tl,rl,reply_userid,m,headimg,writetime,clientname,\
-                                    userindexurl,insert_time)" %self.news_comment_table + "values(\
-                                    %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,\
-                                    %s,%s,%s,%s,%s,%s,%s,%s,now())"
-                        cursor.execute(sSql,cl)
-                        conn.commit()
-                        conn.close()
-                    except Exception as e:
-                        comm.print_log("error","[%s][%s]" %(traceback.format_exc(),news_info))
+                        cl = cl + (comment[i],)
+                    cl_list.append(cl)
+                        # cl.append(comment[i])                
+                    # try:
+                    #     conn = comm.conn_kael()
+                    #     cursor = conn.cursor()
+                    #     sSql = "insert into %s (newsid,l,comment_id,comment,nick_name,userid,user_location,\
+                    #                 comment_time,support,disagree,device_name,r,clientid,ir,sf,\
+                    #                 user_level,tl,rl,reply_userid,m,headimg,writetime,clientname,\
+                    #                 userindexurl,insert_time)" %self.news_comment_table + "values(\
+                    #                 %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,\
+                    #                 %s,%s,%s,%s,%s,%s,%s,%s,now())"
+                    #     cursor.execute(sSql,cl)
+                    #     conn.commit()
+                    #     conn.close()
+                    # except Exception as e:
+                    #     comm.print_log("error","[%s][%s]" %(traceback.format_exc(),cl))
 
                     if len(comments["R"]) > 0:
                         for commentr in comments["R"]:
-                            cr = [newsid]
+                            # cr = [newsid]
+                            cr = (newsid,)
                             for j in commentr.keys():
-                                cr.append(commentr[j])
-                            try:
-                                conn = comm.conn_kael()
-                                cursor = conn.cursor()
-                                sSql = "insert into %s (newsid,l,comment_id,comment,nick_name,userid,user_location,\
+                                cr = cr + (commentr[j],)
+                                # cr.append(commentr[j])
+                            cl_list.append(cr)
+                try:
+                    conn = comm.conn_kael()
+                    cursor = conn.cursor()
+                    sSql = "insert into %s (newsid,l,comment_id,comment,nick_name,userid,user_location,\
                                     comment_time,support,disagree,device_name,r,clientid,ir,sf,\
                                     user_level,tl,rl,reply_userid,m,headimg,writetime,clientname,\
                                     userindexurl,insert_time)" %self.news_comment_table + "values(\
                                     %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,\
                                     %s,%s,%s,%s,%s,%s,%s,%s,now())"
-                                cursor.execute(sSql,cr)
-                                conn.commit()
-                                conn.close()
-                            except Exception as e:
-                                comm.print_log("error","[%s][%s]" %(traceback.format_exc(),news_info))
+                    # cursor.execute(sSql,cl_list)
+                    cursor.executemany(sSql,cl_list)
+                    conn.commit()
+                    conn.close()
+                except Exception as e:
+                    comm.print_log("error","[%s][%s]" %(traceback.format_exc(),cl_list))
 
 
 

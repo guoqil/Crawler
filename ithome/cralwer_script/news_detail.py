@@ -65,13 +65,17 @@ class GetNewsDetail(object):
         except Exception as e:
             comm.print_log("error","%s" %traceback.format_exc())
 
-        pool = Pool(processes=self.process_num)
+        # pool = Pool(processes=self.process_num)
         for newsid in (newsid_list):
             print(newsid)
-            pool.apply_async(self.get_news_detail,(newsid,))
+            try:
+                self.get_news_detail(newsid)
+            except Exception as e:
+                comm.print_log("error","%s" %traceback.format_exc())
+            # pool.apply_async(self.get_news_detail,(newsid,))
             # self.get_news_detail(newsid)
-        pool.close()
-        pool.join()
+        # pool.close()
+        # pool.join()
         print("done!")
 
     def get_news_detail(self,newsid):
