@@ -20,11 +20,13 @@ bash /home/kael/myobject/ithome/cralwer_script/news_comment_crawler.sh ${comm_da
 
 day=${cal_date:8:2}
 echo ${day}
+sync_month=`date -d"${cal_date} -1 months" +"%Y-%m"`
 if [ "${day}" -eq "02" ]; then
-    bash /home/kael/myobject/ithome/data_sync/newsdetail2hive.sh ${cal_date:0:7} > /home/kael/myobject/logs/newsdetail2hive_${cal_date:0:7}.log
-    # echo ${cal_date:0:7}
+    echo "同步详情页爬虫"
+    bash /home/kael/myobject/ithome/data_sync/newsdetail2hive.sh ${sync_month} > /home/kael/myobject/logs/newsdetail2hive_${sync_month}.log
 elif [ "${day}" -eq "16" ]; then
-    bash /home/kael/myobject/ithome/data_sync/newscomment2hive.sh ${cal_date:0:7} > /home/kael/myobject/logs/newscomment2hive_${cal_date:0:7}.log
+    echo "同步评论页爬虫"
+    bash /home/kael/myobject/ithome/data_sync/newscomment2hive.sh ${sync_month} > /home/kael/myobject/logs/newscomment2hive_${sync_month}.log
 else
     echo "时间未到，无需同步数据"
 fi
